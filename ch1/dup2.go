@@ -10,9 +10,10 @@ import (
 
 func main() {
 	counts := make(map[string]int)
+	lineToFile := make(map[string][]string)
 	files := os.Args[1:]
 	if len(files) == 0 {
-		countLines(os.Stdin, counts)
+		countLines(os.Stdin, counts, lineToFile)
 	} else {
 		for _, arg := range files {
 			f, err := os.Open(arg)
@@ -20,7 +21,7 @@ func main() {
 				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
 				continue
 			}
-			countLines(f, counts)
+			countLines(f, counts, lineToFile)
 			f.Close()
 		}
 	}
@@ -28,15 +29,28 @@ func main() {
 	// order of increasing (or decreasing) count?
 	for line, n := range counts {
 		if n > 1 {
-			fmt.Printf("%d\t%s\n", n, line)
+			fmt.Printf("%d\t%s\t%v\n", n, line, lineToFile[line])
 		}
 	}
 }
 
-func countLines(f *os.File, counts map[string]int) {
+func countLines(f *os.File, counts map[string]int, lineToFile map[string][]string) {
 	input := bufio.NewScanner(f)
 	for input.Scan() {
-		counts[input.Text()]++
+		t := input.Text()
+		counts[t]++
+		if !stringInSlice(f.Name(), lineToFile[t]) {
+			lineToFile[t] = append(lineToFile[t], f.Name())
+		}
 	}
 	// NOTE: Ignoring potential errors from input.Err()
+}
+
+func stringInSlice(str string, slice []string) bool {
+	for _, val := range slice {
+		if str == val {
+			return true
+		}
+	}
+	return false
 }
