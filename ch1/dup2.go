@@ -24,6 +24,8 @@ func main() {
 			f.Close()
 		}
 	}
+	// Interesting improvement to think about: How to print the lines sorted in
+	// order of increasing (or decreasing) count?
 	for line, n := range counts {
 		if n > 1 {
 			fmt.Printf("%d\t%s\n", n, line)
