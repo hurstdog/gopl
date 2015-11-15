@@ -17,12 +17,14 @@ func main() {
 			url = strings.Join([]string{httpPrefix, url}, "")
 		}
 		resp, err := http.Get(url)
+		defer resp.Body.Close()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
 			os.Exit(1)
 		}
+		fmt.Println(resp.Status)
 		for {
-			written, err := io.Copy(os.Stderr, resp.Body)
+			written, err := io.Copy(os.Stdout, resp.Body)
 			if written == 0 {
 				break
 			}
@@ -31,6 +33,5 @@ func main() {
 				os.Exit(1)
 			}
 		}
-		resp.Body.Close()
 	}
 }
