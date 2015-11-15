@@ -6,10 +6,16 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 )
+
+const httpPrefix = "http://"
 
 func main() {
 	for _, url := range os.Args[1:] {
+		if !strings.HasPrefix(url, httpPrefix) {
+			url = strings.Join([]string{httpPrefix, url}, "")
+		}
 		resp, err := http.Get(url)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
