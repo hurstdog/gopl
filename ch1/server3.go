@@ -11,6 +11,7 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"sync"
 )
 
@@ -35,7 +36,7 @@ func main() {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/count", counter)
 	http.HandleFunc("/lissajous", func(w http.ResponseWriter, r *http.Request) {
-		lissajous(w)
+		lissajous(w, r)
 	})
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
@@ -69,14 +70,21 @@ func counter(w http.ResponseWriter, r *http.Request) {
 	mu.Unlock()
 }
 
-func lissajous(out io.Writer) {
+func lissajous(out io.Writer, r *http.Request) {
+	cycles := 5.0 // number of complete x oscillator revolutions
 	const (
-		cycles  = 5     // number of complete x oscillator revolutions
 		res     = 0.001 // angular resolution
 		size    = 100   // image canvas covers [-size..+size]
 		nframes = 64    // number of animation frames
 		delay   = 8     // delay between frames in 10ms units
 	)
+	if r.Form["cycles"] != nil {
+		formCycles, err := strconv.Atoi(r.Form["cycles"][0])
+		if err != nil {
+			fmt.Fprintf(out, "Error reading form(%q): %v", r.Form, err)
+		}
+		cycles = float64(formCycles)
+	}
 	freq := rand.Float64() * 3.0 // relative frequncy of y oscillator
 	anim := gif.GIF{LoopCount: nframes}
 	phase := 0.0 // phase difference
