@@ -27,10 +27,11 @@ var palette = []color.Color{
 
 const (
 	backgroundIndex = 0 // first color in palette
+	minColorIndex   = 1
+	maxColorIndex   = 3
 )
 
-const minColorIndex = 1
-const maxColorIndex = 3
+const cyclesParam = "cycles"
 
 func main() {
 	http.HandleFunc("/", handler)
@@ -78,8 +79,8 @@ func lissajous(out io.Writer, r *http.Request) {
 		nframes = 64    // number of animation frames
 		delay   = 8     // delay between frames in 10ms units
 	)
-	if r.Form["cycles"] != nil {
-		formCycles, err := strconv.Atoi(r.Form["cycles"][0])
+	if r.Form[cyclesParam] != nil {
+		formCycles, err := strconv.Atoi(r.Form[cyclesParam][0])
 		if err != nil {
 			fmt.Fprintf(out, "Error reading form(%q): %v", r.Form, err)
 		}
