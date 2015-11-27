@@ -32,6 +32,15 @@ func TestPopCountLoop(t *testing.T) {
 	}
 }
 
+func TestPopCountShift(t *testing.T) {
+	for value, expected := range testTable {
+		p := PopCountShift(value)
+		if p != expected {
+			t.Errorf("PopCountShift(%v): expected %v, got %v\n", value, expected, p)
+		}
+	}
+}
+
 const testval = uint64(1231292910189123013)
 
 func BenchmarkPopCountLoop(b *testing.B) {
@@ -43,5 +52,11 @@ func BenchmarkPopCountLoop(b *testing.B) {
 func BenchmarkPopCountRaw(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		PopCount(testval)
+	}
+}
+
+func BenchmarkPopCountShift(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PopCountShift(testval)
 	}
 }
