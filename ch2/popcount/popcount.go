@@ -47,16 +47,23 @@ func PopCountShift(x uint64) int {
 }
 
 // PopCountShift2 returns the population count (number of set bits) of x.
-// The difference is this one shifts x by one every time and saves the result
-// (wondering if there is an optimization for single-bit shifts).
-// Note: Only slightly faster
+// This is the version from gopl.io
 func PopCountShift2(x uint64) int {
-	var res int
+	n := 0
 	for i := uint64(0); i < 64; i++ {
-		if i > 0 {
-			x = x >> 1
+		if x&(1<<i) != 0 {
+			n++
 		}
-		res += int(x & 1)
 	}
-	return res
+	return n
+}
+
+// PopCountBitTrick returns the population count (number of set bits) of x.
+func PopCountBitTrick(x uint64) int {
+	n := 0
+	for x != 0 {
+		x = x & (x - 1)
+		n++
+	}
+	return n
 }
