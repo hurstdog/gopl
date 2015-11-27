@@ -13,7 +13,7 @@ func CToK(c Celsius) Kelvin { return Kelvin(c - 273.15) }
 func FToK(f Fahrenheit) Kelvin { return CToK(FToC(f)) }
 
 // Kelvin -> Celsius
-func KToC(k Kelvin) Celsius { return k + 273.15 }
+func KToC(k Kelvin) Celsius { return Celsius(k + 273.15) }
 
 // Kelvin -> Fahrenheit
 func KToF(k Kelvin) Fahrenheit { return CToF(KToC(k)) }
