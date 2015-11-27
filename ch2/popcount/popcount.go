@@ -45,3 +45,18 @@ func PopCountShift(x uint64) int {
 	}
 	return res
 }
+
+// PopCountShift2 returns the population count (number of set bits) of x.
+// The difference is this one shifts x by one every time and saves the result
+// (wondering if there is an optimization for single-bit shifts).
+// Note: Only slightly faster
+func PopCountShift2(x uint64) int {
+	var res int
+	for i := uint64(0); i < 64; i++ {
+		if i > 0 {
+			x = x >> 1
+		}
+		res += int(x & 1)
+	}
+	return res
+}
