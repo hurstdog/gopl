@@ -18,8 +18,30 @@ func TestPopCount(t *testing.T) {
 	for value, expected := range testTable {
 		p := PopCount(value)
 		if p != expected {
-			t.Errorf("PopCount(%g): expected %g, got %g\n", value, expected, p)
+			t.Errorf("PopCount(%v): expected %v, got %v\n", value, expected, p)
 		}
 	}
+}
 
+func TestPopCountLoop(t *testing.T) {
+	for value, expected := range testTable {
+		p := PopCountLoop(value)
+		if p != expected {
+			t.Errorf("PopCountLoop(%v): expected %v, got %v\n", value, expected, p)
+		}
+	}
+}
+
+const testval = uint64(1231292910189123013)
+
+func BenchmarkPopCountLoop(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PopCountLoop(testval)
+	}
+}
+
+func BenchmarkPopCountRaw(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PopCount(testval)
+	}
 }
