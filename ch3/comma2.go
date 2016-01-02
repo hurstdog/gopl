@@ -18,19 +18,23 @@ func main() {
 // recursion!
 func comma(s string) string {
 	var buf bytes.Buffer
-	dot := strings.Index(s, ".")
-	l := dot
-	if dot < 0 {
-		l = len(s)
+	signpad := 0
+	if len(s) > 0 && s[0] == '-' {
+		signpad = 1
 	}
-	i := l % 3
+	length := strings.Index(s, ".")
+	if length < 0 {
+		length = len(s)
+	}
+	length = length - signpad
+	i := length%3 + signpad
 	buf.WriteString(s[:i])
 	for i < len(s) {
 		if s[i] == '.' {
 			buf.WriteString(s[i:])
 			break
 		}
-		if i != 0 {
+		if i != signpad {
 			buf.WriteString(",")
 		}
 		end := i + 3
