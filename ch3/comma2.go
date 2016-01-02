@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -17,7 +18,12 @@ func main() {
 // recursion!
 func comma(s string) string {
 	var buf bytes.Buffer
-	i := len(s) % 3
+	dot := strings.Index(s, ".")
+	l := dot
+	if dot < 0 {
+		l = len(s)
+	}
+	i := l % 3
 	buf.WriteString(s[:i])
 	for i < len(s) {
 		if s[i] == '.' {
@@ -27,7 +33,12 @@ func comma(s string) string {
 		if i != 0 {
 			buf.WriteString(",")
 		}
-		buf.WriteString(s[i : i+3])
+		end := i + 3
+		if end >= len(s) {
+			buf.WriteString(s[i:])
+			break
+		}
+		buf.WriteString(s[i:end])
 		i += 3
 	}
 	return buf.String()
