@@ -16,27 +16,19 @@ func main() {
 
 // recursion!
 func comma(s string) string {
-	// create a buffer.
-	// Loop over the string backwards in groups of three, adding in a comma
-	// between each.
-	var c int
 	var buf bytes.Buffer
 	i := len(s) % 3
-	buf.WriteString(s[:i] + ",")
-	for ; i < len(s); i++ {
+	buf.WriteString(s[:i])
+	for i < len(s) {
 		if s[i] == '.' {
 			buf.WriteString(s[i:])
 			break
 		}
-		buf.WriteByte(s[i])
-		c++
-		if c > 2 {
-			if i+1 < len(s) && s[i+1] != '.' {
-				buf.WriteByte(',')
-				c = 0
-			}
+		if i != 0 {
+			buf.WriteString(",")
 		}
+		buf.WriteString(s[i : i+3])
+		i += 3
 	}
-
 	return buf.String()
 }
